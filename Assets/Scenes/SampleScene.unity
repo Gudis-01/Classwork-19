@@ -119,6 +119,96 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &523949122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 523949124}
+  - component: {fileID: 523949123}
+  m_Layer: 0
+  m_Name: Sphere Shooter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &523949123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523949122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 046a0b2ad4732f746b04df55abb4d355, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Classwork18.VR.ControllerShooter
+  shootOrigin: {fileID: 2019780424}
+  spherePrefab: {fileID: 0}
+  sphereMaterial: {fileID: 2100000, guid: 95a6933f59afb984db1e676ab9ca04bf, type: 2}
+  sphereSize: 0.1
+  shootSpeed: 8
+  destroyGrabbables: 1
+  shootButton:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Shoot
+      m_Type: 1
+      m_ExpectedControlType: 
+      m_Id: 1790138e-03cc-4698-803c-b71a9574956d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 898d3668-cfab-4a28-aa0b-c4d007af767c
+        m_Path: <XRController>{RightHand}/{SecondaryButton}
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Shoot
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  destroyButton:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Destroy All
+      m_Type: 1
+      m_ExpectedControlType: 
+      m_Id: cdf826a9-dddf-4dd7-b1f0-2488d7457463
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: a3e180b5-691a-4738-af54-754c8c7977ab
+        m_Path: <XRController>{LeftHand}/{SecondaryButton}
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Destroy All
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+--- !u!4 &523949124
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523949122}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &543816823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1563,6 +1653,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+--- !u!4 &2019780424 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 657184242222895506, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+  m_PrefabInstance: {fileID: 2019780423}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1576,3 +1671,4 @@ SceneRoots:
   - {fileID: 1338308411}
   - {fileID: 2019780423}
   - {fileID: 1689463789}
+  - {fileID: 523949124}

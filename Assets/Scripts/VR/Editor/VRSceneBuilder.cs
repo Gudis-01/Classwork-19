@@ -100,11 +100,46 @@ namespace Classwork18.VR.Editor
             EnsureInteractionManager();
             EnsureInputActionManager();
             BuildEnvironment();
+            AddShooterTo(rig);
 
             Undo.CollapseUndoOperations(group);
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             Selection.activeGameObject = rig;
             Debug.Log($"[VR Classwork] Added '{rigPrefab.name}'. Save the scene (Ctrl+S) and press Play with the headset connected.");
+        }
+
+        // ------------------------------------------------------------------ step 3
+
+        [MenuItem("Tools/VR Classwork/3. Add Sphere Shooter (B shoots, Y destroys)", priority = 3)]
+        public static void AddShooter()
+        {
+            var origin = Object.FindAnyObjectByType<XROrigin>();
+            if (origin == null)
+            {
+                EditorUtility.DisplayDialog("VR Scene", "No XR rig in the scene. Run step 2 first.", "OK");
+                return;
+            }
+            if (Object.FindAnyObjectByType<ControllerShooter>() != null)
+            {
+                EditorUtility.DisplayDialog("VR Scene", "The scene already has a Sphere Shooter.", "OK");
+                return;
+            }
+            AddShooterTo(origin.gameObject);
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+        static void AddShooterTo(GameObject rig)
+        {
+            var go = new GameObject("Sphere Shooter");
+            Undo.RegisterCreatedObjectUndo(go, "Sphere Shooter");
+            var shooter = go.AddComponent<ControllerShooter>();
+            shooter.shootOrigin = rig.GetComponentsInChildren<Transform>(true)
+                .FirstOrDefault(t => t.name == "Right Controller");
+            shooter.sphereMaterial = GetMaterial("VR_Sphere", new Color(1f, 0.75f, 0.1f));
+
+            if (shooter.shootOrigin == null)
+                Debug.LogWarning("[VR Classwork] Couldn't find 'Right Controller' in the rig. Drag it into Sphere Shooter > Shoot Origin.", go);
+            Selection.activeGameObject = go;
         }
 
         static GameObject FindPrefab(string name)
