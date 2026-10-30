@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 namespace Classwork18.VR.Editor
@@ -16,8 +15,7 @@ namespace Classwork18.VR.Editor
     /// <summary>
     /// Menu: Tools > VR Classwork
     ///   1. Import XRI Samples  -> imports Starter Assets + Hands Interaction Demo (+ XR Hands visualizer)
-    ///   2. Build XRI Scene     -> puts the official XRI hands rig in the open scene, plus floor,
-    ///                             table and grabbable cubes. Replaces the old hand-made rig.
+    ///   2. Build XRI Scene     -> puts the official XRI hands rig in the open scene, plus floor and table.
     /// Everything done by step 2 can be undone with Ctrl+Z.
     /// </summary>
     public static class VRSceneBuilder
@@ -73,11 +71,6 @@ namespace Classwork18.VR.Editor
             Undo.SetCurrentGroupName("Build XRI Scene");
             int group = Undo.GetCurrentGroup();
 
-            // Remove the old hand-made rig (the one with VRLocomotion).
-            foreach (var origin in Object.FindObjectsByType<XROrigin>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                if (origin.GetComponent<VRLocomotion>() != null)
-                    Undo.DestroyObjectImmediate(origin.gameObject);
-
             if (Object.FindAnyObjectByType<XROrigin>() != null)
             {
                 EditorUtility.DisplayDialog("VR Scene", "This scene already has an XRI rig. Delete it first if you want to rebuild.", "OK");
@@ -100,46 +93,11 @@ namespace Classwork18.VR.Editor
             EnsureInteractionManager();
             EnsureInputActionManager();
             BuildEnvironment();
-            AddShooterTo(rig);
 
             Undo.CollapseUndoOperations(group);
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             Selection.activeGameObject = rig;
             Debug.Log($"[VR Classwork] Added '{rigPrefab.name}'. Save the scene (Ctrl+S) and press Play with the headset connected.");
-        }
-
-        // ------------------------------------------------------------------ step 3
-
-        [MenuItem("Tools/VR Classwork/3. Add Sphere Shooter (B shoots, Y destroys)", priority = 3)]
-        public static void AddShooter()
-        {
-            var origin = Object.FindAnyObjectByType<XROrigin>();
-            if (origin == null)
-            {
-                EditorUtility.DisplayDialog("VR Scene", "No XR rig in the scene. Run step 2 first.", "OK");
-                return;
-            }
-            if (Object.FindAnyObjectByType<ControllerShooter>() != null)
-            {
-                EditorUtility.DisplayDialog("VR Scene", "The scene already has a Sphere Shooter.", "OK");
-                return;
-            }
-            AddShooterTo(origin.gameObject);
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-        }
-
-        static void AddShooterTo(GameObject rig)
-        {
-            var go = new GameObject("Sphere Shooter");
-            Undo.RegisterCreatedObjectUndo(go, "Sphere Shooter");
-            var shooter = go.AddComponent<ControllerShooter>();
-            shooter.shootOrigin = rig.GetComponentsInChildren<Transform>(true)
-                .FirstOrDefault(t => t.name == "Right Controller");
-            shooter.sphereMaterial = GetMaterial("VR_Sphere", new Color(1f, 0.75f, 0.1f));
-
-            if (shooter.shootOrigin == null)
-                Debug.LogWarning("[VR Classwork] Couldn't find 'Right Controller' in the rig. Drag it into Sphere Shooter > Shoot Origin.", go);
-            Selection.activeGameObject = go;
         }
 
         static GameObject FindPrefab(string name)
@@ -211,45 +169,6 @@ namespace Classwork18.VR.Editor
                 table.GetComponent<Renderer>().sharedMaterial = GetMaterial("VR_Table", new Color(0.45f, 0.3f, 0.2f));
                 table.isStatic = true;
             }
-
-            // Cubes: convert the old ones, or make new ones.
-            var oldGrabbables = Object.FindObjectsByType<VRGrabbable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            if (oldGrabbables.Length > 0)
-            {
-                foreach (var old in oldGrabbables)
-                {
-                    var go = old.gameObject;
-                    Undo.DestroyObjectImmediate(old);
-                    MakeGrabbable(go);
-                }
-                return;
-            }
-
-            Color[] colors = { new Color(0.9f, 0.25f, 0.25f), new Color(0.25f, 0.6f, 0.95f), new Color(0.3f, 0.8f, 0.4f) };
-            for (int i = 0; i < colors.Length; i++)
-            {
-                var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                Undo.RegisterCreatedObjectUndo(cube, "Cube");
-                cube.name = "Grab Cube " + (i + 1);
-                cube.transform.position = new Vector3(-0.3f + i * 0.3f, 0.86f, 0.75f);
-                cube.transform.localScale = Vector3.one * 0.1f;
-                cube.GetComponent<Renderer>().sharedMaterial = GetMaterial("VR_Cube" + (i + 1), colors[i]);
-                MakeGrabbable(cube);
-            }
-        }
-
-        static void MakeGrabbable(GameObject go)
-        {
-            var rb = go.GetComponent<Rigidbody>();
-            if (rb == null) rb = Undo.AddComponent<Rigidbody>(go);
-            rb.mass = 0.5f;
-            rb.interpolation = RigidbodyInterpolation.Interpolate;
-            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-
-            var grab = go.GetComponent<XRGrabInteractable>();
-            if (grab == null) grab = Undo.AddComponent<XRGrabInteractable>(go);
-            grab.useDynamicAttach = true; // hold it where you grabbed it, not snapped to its center
-            grab.throwOnDetach = true;
         }
 
         static Material GetMaterial(string name, Color color)
