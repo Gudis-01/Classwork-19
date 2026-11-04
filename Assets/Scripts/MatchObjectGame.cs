@@ -43,7 +43,7 @@ public class MatchObjectGame : MonoBehaviour
     public void Confirm()
     {
         bool ok = player.shape == target.shape && player.color == target.color && player.size == target.size && SameRotation();
-        Say(ok ? "¡Correcto!" : "Algo no coincide. Sigue intentando", ok ? Color.green : new Color(1f, 0.6f, 0f));
+        Say(ok ? "Â¡Correcto!" : "Algo no coincide. Sigue intentando", ok ? Color.green : new Color(1f, 0.6f, 0f));
     }
 
     bool SameRotation()

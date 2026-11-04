@@ -337,7 +337,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1734059798}
         m_TargetAssemblyTypeName: MatchObjectGame, Assembly-CSharp
-        m_MethodName: SetColor
+        m_MethodName: SetShape
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1453,7 +1453,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2082,7 +2082,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -4697,7 +4697,7 @@ MonoBehaviour:
     color: 0
     size: 0
     rot: {x: 0, y: 0, z: 0, w: 1}
-  feedback: {fileID: 0}
+  feedback: {fileID: 895206918}
 --- !u!1 &1814172586
 GameObject:
   m_ObjectHideFlags: 0
